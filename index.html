@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WatchAdvisers - プロジェクト紹介</title>
+    <title>WatchAdvisers - Presentation</title>
     <!-- Google Fonts 適用 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,288 +26,412 @@
             background-color: var(--bg-dark);
             color: var(--text-main);
             line-height: 1.6;
-            overflow-x: hidden;
+            overflow: hidden; /* PPT 느낌을 위해 전체 스크롤 방지 */
             background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, transparent 70%);
+            width: 100vw;
+            height: 100vh;
         }
 
         h1, h2, h3, .serif { font-family: 'Playfair Display', serif; }
 
-        /* ヘッダー */
-        header {
-            text-align: center;
-            padding: 100px 20px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-            position: relative;
+        /* Presentation Layout */
+        .progress-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.1); z-index: 1000;
+        }
+        .progress-bar {
+            height: 100%; background: var(--gold); width: 0%; transition: width 0.4s ease;
         }
 
-        .title { 
-            font-size: 4rem; 
-            color: var(--gold); 
-            margin-bottom: 20px; 
-            text-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        .presentation-wrapper {
+            position: relative; width: 100%; height: 100%;
+        }
+
+        .slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            transform: translateY(30px) scale(0.98);
+            display: flex; align-items: center; justify-content: center;
+            padding: 60px 40px 100px; /* 하단 컨트롤러 공간 확보 */
+            overflow-y: auto; /* 내용이 너무 길면 자체 스크롤 */
+        }
+
+        .slide.active {
+            opacity: 1; visibility: visible; transform: translateY(0) scale(1); z-index: 10;
         }
         
-        .subtitle { 
-            font-size: 1.2rem; 
-            color: var(--text-muted); 
-            max-width: 800px; 
-            margin: 0 auto; 
-            font-weight: 300;
+        .slide-content {
+            width: 100%; max-width: 1100px; margin: auto;
         }
 
-        /* コンテナ */
-        .container { max-width: 1100px; margin: 0 auto; padding: 60px 20px; }
+        /* Controls */
+        .controls {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; gap: 20px;
+            background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(12px);
+            padding: 12px 24px; border-radius: 50px; border: 1px solid rgba(212, 175, 55, 0.3);
+            z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .nav-btn {
+            background: transparent; color: var(--gold); border: 1px solid var(--gold);
+            padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: all 0.3s;
+            font-family: inherit; font-size: 0.9rem; font-weight: bold; min-width: 90px;
+        }
+        .nav-btn:hover:not(:disabled) {
+            background: var(--gold); color: var(--bg-dark);
+        }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; border-color: gray; color: gray; }
+        
+        .slide-counter { color: white; font-weight: 600; font-variant-numeric: tabular-nums; font-size: 1.1rem; }
+        .hint { position: fixed; bottom: 10px; right: 20px; font-size: 0.8rem; color: var(--text-muted); z-index: 1000; }
 
-        /* 共通セクションタイトル */
-        .section-title {
-            text-align: center; font-size: 2.5rem; margin-bottom: 60px; color: var(--gold);
-        }
-        .section-title::after {
-            content: ''; display: block; width: 80px; height: 3px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            margin: 15px auto 0;
-        }
+        /* 타이포그래피 및 기존 스타일 */
+        .intro-header { text-align: center; }
+        .title { font-size: 5rem; color: var(--gold); margin-bottom: 20px; text-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+        .subtitle { font-size: 1.5rem; color: var(--text-muted); max-width: 800px; margin: 0 auto; font-weight: 300; line-height: 1.8; }
 
-        /* グラスモーフィズムカード (開発目的など) */
-        .card {
-            background: var(--bg-card); backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px;
-            padding: 40px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
-        }
-        .card:hover { border-color: rgba(212, 175, 55, 0.3); }
+        .section-title { text-align: center; font-size: 3rem; margin-bottom: 50px; color: var(--gold); }
+        .section-title::after { content: ''; display: block; width: 80px; height: 3px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 20px auto 0; }
 
-        /* 技術スタックバッジ */
-        .tech-category { margin-bottom: 30px; }
-        .tech-category h3 {
-            color: white; margin-bottom: 15px; font-size: 1.3rem; border-left: 3px solid var(--gold); padding-left: 10px;
-        }
-        .tech-badge {
-            display: inline-block; background: rgba(212, 175, 55, 0.05); color: var(--gold);
-            border: 1px solid rgba(212, 175, 55, 0.5); padding: 8px 18px; border-radius: 30px;
-            margin: 5px 8px 5px 0; font-weight: 600;
-        }
+        .card { background: var(--bg-card); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 50px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
 
-        /* 全体デモ映像セクション */
-        .overall-demo-container {
-            margin-bottom: 80px;
-        }
-        .overall-demo-container .media-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* 機能紹介ブロック */
-        .feature-block {
-            display: flex; flex-wrap: wrap; gap: 40px; margin-bottom: 100px; align-items: center;
-        }
+        /* Feature Block */
+        .feature-block { display: flex; flex-wrap: wrap; gap: 50px; align-items: center; justify-content: space-between; }
         .feature-block:nth-child(even) { flex-direction: row-reverse; }
-
         .feature-content { flex: 1; min-width: 300px; }
-        .feature-media { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 20px; }
+        .feature-media { flex: 1; min-width: 400px; display: flex; flex-direction: column; gap: 20px; }
 
-        .feature-title { font-size: 2rem; color: white; margin-bottom: 20px; display: flex; align-items: center; }
-        .feature-title span { color: var(--gold); margin-right: 15px; font-size: 2.5rem; font-family: 'Playfair Display', serif; }
-        
-        .feature-desc { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 20px; }
-
+        .slide-subtitle { color: var(--gold); text-align: center; margin-bottom: 30px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; }
+        .feature-title { font-size: 2.2rem; color: white; margin-bottom: 20px; display: flex; align-items: center; }
+        .feature-title span { color: var(--gold); margin-right: 15px; font-size: 3rem; font-family: 'Playfair Display', serif; }
+        .feature-desc { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 25px; line-height: 1.7; }
         .feature-list { list-style: none; }
-        .feature-list li { position: relative; padding-left: 25px; margin-bottom: 10px; color: #cbd5e1; }
-        .feature-list li::before { content: '✓'; position: absolute; left: 0; color: var(--gold); font-weight: bold; }
+        .feature-list li { position: relative; padding-left: 30px; margin-bottom: 15px; color: #cbd5e1; font-size: 1.1rem; }
+        .feature-list li::before { content: '✓'; position: absolute; left: 0; color: var(--gold); font-weight: bold; font-size: 1.2rem; }
 
-        /* メディアコンテナ (YouTube) */
-        .media-container {
-            position: relative; border-radius: 12px; overflow: hidden;
-            border: 1px solid rgba(212, 175, 55, 0.2); background: #000;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        }
+        /* Media */
+        .overall-demo-container .media-container { max-width: 900px; margin: 0 auto; }
+        .media-container { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid rgba(212, 175, 55, 0.2); background: #000; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5); }
         .ratio-16x9 { padding-bottom: 56.25%; height: 0; }
-        .ratio-16x9 iframe {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
-        }
+        .ratio-16x9 iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .media-label { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 0.9rem; z-index: 2; border: 1px solid var(--gold); }
 
-        .media-label {
-            position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff;
-            padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; z-index: 2; border: 1px solid var(--gold);
-        }
+        /* Tech Badges (Grid layout for PPT) */
+        .tech-stack-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .tech-category h3 { color: white; margin-bottom: 20px; font-size: 1.5rem; border-left: 4px solid var(--gold); padding-left: 15px; }
+        .tech-badge { display: inline-block; background: rgba(212, 175, 55, 0.05); color: var(--gold); border: 1px solid rgba(212, 175, 55, 0.5); padding: 10px 22px; border-radius: 30px; margin: 5px 8px 5px 0; font-weight: 600; font-size: 1.1rem; transition: transform 0.2s; }
+        .tech-badge:hover { transform: translateY(-3px); background: rgba(212, 175, 55, 0.15); }
 
-        /* フッター */
-        footer {
-            text-align: center; padding: 40px; color: var(--text-muted);
-            border-top: 1px solid rgba(255,255,255,0.05); margin-top: 50px;
-        }
+        /* Footer Slide */
+        .footer-content { text-align: center; color: var(--text-muted); }
+        .footer-title { font-size: 4rem; color: var(--gold); margin-bottom: 20px; }
+        .footer-subtitle { font-size: 1.5rem; margin-bottom: 40px; }
 
         @media (max-width: 768px) {
-            .title { font-size: 2.5rem; }
+            .title { font-size: 3rem; }
+            .subtitle { font-size: 1.2rem; }
             .feature-block, .feature-block:nth-child(even) { flex-direction: column; }
+            .feature-media { min-width: 100%; }
+            .controls { bottom: 15px; width: 90%; justify-content: space-between; }
+            .slide { padding: 40px 20px 80px; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1 class="title">WatchAdvisers</h1>
-        <p class="subtitle">個人の予算、好み、目的に合った完璧な時計を見つけてくれるAIベースの高級時計コンシェルジュサービス</p>
-    </header>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
 
-    <div class="container">
+    <!-- Controls -->
+    <div class="controls">
+        <button id="prevBtn" class="nav-btn">← Prev</button>
+        <span class="slide-counter" id="slideCounter">1 / 10</span>
+        <button id="nextBtn" class="nav-btn">Next →</button>
+    </div>
+    <div class="hint">Use ← → or Space to navigate</div>
 
-        <!-- 1. 開発の背景と目的 -->
-        <h2 class="section-title">Background & Motivation</h2>
-        <div class="card">
-            <h3 style="color:var(--gold); margin-bottom: 15px; font-size: 1.5rem;">機械式時計への情熱と初心者の参入障壁の解消</h3>
-            <p style="margin-bottom: 15px;">
-                新社会人や営業職など、ビジネス環境において腕時計は単なる時間を知る道具を超え、<strong>第一印象や信頼感を左右する重要なアイテム</strong>です。
-            </p>
-            <p style="margin-bottom: 15px;">
-                しかし、機械式時計の世界は数多くのブランド、複雑な歴史や機械的特性があるため、知識が不足している初心者にとって<strong>「自分の予算やライフスタイルに合った完璧な時計」</strong>を見つけるのは非常に困難です。
-            </p>
-            <p>
-                これらの課題（Pain Point）を解決するため、<strong>Google Gemini API（生成AI）</strong>を導入し、まるで実際の時計専門家（コンシェルジュ）に相談しているかのように、ユーザーの条件に最適化された時計を提案するウェブアプリケーションを開発しました。
-            </p>
-        </div>
+    <!-- Presentation Wrapper -->
+    <div class="presentation-wrapper">
 
-        <!-- 全体デモ映像 -->
-        <h2 class="section-title">Full Demo Video</h2>
-        <div class="overall-demo-container">
-            <div class="media-container ratio-16x9">
-                <span class="media-label">Overall Walkthrough (全体実装映像)</span>
-                <!-- 全体実装映像 -->
-                <iframe src="https://www.youtube.com/embed/W5Z7AXj0tXU?rel=0" title="WatchAdvisers Overall Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <!-- Slide 1: Title -->
+        <section class="slide active">
+            <div class="slide-content intro-header">
+                <h1 class="title">WatchAdvisers</h1>
+                <p class="subtitle">個人の予算、好み、目的に合った完璧な時計を見つけてくれる<br>AIベースの高級時計コンシェルジュサービス</p>
             </div>
-        </div>
+        </section>
 
-        <!-- 2. 技術スタック -->
-        <h2 class="section-title">Tech Stack</h2>
-        <div class="card">
-            <div class="tech-category">
-                <h3>Backend</h3>
-                <span class="tech-badge">Java 17</span>
-                <span class="tech-badge">Spring Boot</span>
-                <span class="tech-badge">MySQL</span>
-                <span class="tech-badge">Spring Data JPA (Hibernate)</span>
-                <span class="tech-badge">Lombok</span>
-            </div>
-            
-            <div class="tech-category">
-                <h3>Frontend</h3>
-                <span class="tech-badge">HTML5 / CSS3</span>
-                <span class="tech-badge">Vanilla JavaScript</span>
-                <span class="tech-badge">Thymeleaf</span>
-                <span class="tech-badge">Bootstrap 5</span>
-            </div>
-
-            <div class="tech-category">
-                <h3>External APIs / Env</h3>
-                <span class="tech-badge">Google Gemini API</span>
-                <span class="tech-badge">Google Maps Embed API</span>
-                <span class="tech-badge">Spring Tools Suite 4</span>
-                <span class="tech-badge">Git / GitHub</span>
-            </div>
-        </div>
-
-        <!-- 3. 主要機能の紹介 -->
-        <h2 class="section-title">Key Features</h2>
-
-        <!-- Feature 1 -->
-        <div class="feature-block">
-            <div class="feature-content">
-                <h3 class="feature-title"><span>01</span> AI ウォッチコンシェルジュ</h3>
-                <p class="feature-desc">Google Gemini APIを活用した対話型カスタマイズ推薦システムです。ユーザーの複雑な要件を正確に分析します。</p>
-                <ul class="feature-list">
-                    <li>予算、好みのスタイル（ダイバーズ、ドレスなど）、好みの国の条件を入力</li>
-                    <li>AIが最適なモデルを分析し、推薦理由を自然言語で生成</li>
-                    <li>ユーザーに合わせた専門家レベルのフィードバックを提供</li>
-                </ul>
-            </div>
-            <div class="feature-media">
-                <div class="media-container ratio-16x9">
-                    <span class="media-label">Feature 01 Video</span>
-                    <iframe src="https://www.youtube.com/embed/raauzGLToJ0?rel=0" title="AI Concierge Demo" frameborder="0" allowfullscreen></iframe>
+        <!-- Slide 2: Background -->
+        <section class="slide">
+            <div class="slide-content">
+                <h2 class="section-title">Background & Motivation</h2>
+                <div class="card">
+                    <h3 style="color:var(--gold); margin-bottom: 20px; font-size: 1.8rem;">機械式時計への情熱と初心者の参入障壁の解消</h3>
+                    <p style="margin-bottom: 20px; font-size: 1.2rem;">
+                        新社会人や営業職など、ビジネス環境において腕時計は単なる時間を知る道具を超え、<strong>第一印象や信頼感を左右する重要なアイテム</strong>です。
+                    </p>
+                    <p style="margin-bottom: 20px; font-size: 1.2rem;">
+                        しかし、機械式時計の世界は数多くのブランド、複雑な歴史や機械的特性があるため、知識が不足している初心者にとって<strong>「自分の予算やライフスタイルに合った完璧な時計」</strong>を見つけるのは非常に困難です。
+                    </p>
+                    <p style="font-size: 1.2rem;">
+                        これらの課題（Pain Point）を解決するため、<strong>Google Gemini API（生成AI）</strong>を導入し、まるで実際の時計専門家（コンシェルジュ）に相談しているかのように、ユーザーの条件に最適化された時計を提案するウェブアプリケーションを開発しました。
+                    </p>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Feature 2 -->
-        <div class="feature-block">
-            <div class="feature-content">
-                <h3 class="feature-title"><span>02</span> 公式ストア位置案内</h3>
-                <p class="feature-desc">推薦された時計を実際に購入したり試着したりできるオフラインの公式店舗を探します。</p>
-                <ul class="feature-list">
-                    <li>Google Maps API連携</li>
-                    <li>選択した特定の地域・都市に基づく店舗検索</li>
-                    <li>該当ブランドの認定された公式ディーラーおよびブティックを表示</li>
-                </ul>
-            </div>
-            <div class="feature-media">
-                <div class="media-container ratio-16x9">
-                    <span class="media-label">Feature 02 Video</span>
-                    <iframe src="https://www.youtube.com/embed/_sP2SYEtUv0?rel=0" title="Store Locator Demo" frameborder="0" allowfullscreen></iframe>
+        <!-- Slide 3: Overall Demo -->
+        <section class="slide">
+            <div class="slide-content">
+                <h2 class="section-title">Full Demo Video</h2>
+                <div class="overall-demo-container">
+                    <div class="media-container ratio-16x9">
+                        <span class="media-label">Overall Walkthrough (全体実装映像)</span>
+                        <iframe src="https://www.youtube.com/embed/W5Z7AXj0tXU?rel=0" title="WatchAdvisers Overall Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Feature 3 -->
-        <div class="feature-block">
-            <div class="feature-content">
-                <h3 class="feature-title"><span>03</span> 詳細検索＆フィルタリング</h3>
-                <p class="feature-desc">独自に構築されたデータベース内で、希望するカテゴリー別に時計を迅速かつ直感的に探索します。</p>
-                <ul class="feature-list">
-                    <li>多様なブランド別の分類・探索（例：Rolex, Grand Seiko 等）</li>
-                    <li>スタイル別の分類（ドレスウォッチ、スポーツ、クロノグラフ）</li>
-                </ul>
-            </div>
-            <div class="feature-media">
-                <div class="media-container ratio-16x9">
-                    <span class="media-label">Feature 03 Video</span>
-                    <iframe src="https://www.youtube.com/embed/XrN6b8H9Puo?rel=0" title="Filtering Demo" frameborder="0" allowfullscreen></iframe>
+        <!-- Slide 4: Tech Stack -->
+        <section class="slide">
+            <div class="slide-content">
+                <h2 class="section-title">Tech Stack</h2>
+                <div class="card tech-stack-container">
+                    <div class="tech-category">
+                        <h3>Backend</h3>
+                        <span class="tech-badge">Java 17</span>
+                        <span class="tech-badge">Spring Boot</span>
+                        <span class="tech-badge">MySQL</span>
+                        <span class="tech-badge">Spring Data JPA</span>
+                        <span class="tech-badge">Lombok</span>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <h3>Frontend</h3>
+                        <span class="tech-badge">HTML5 / CSS3</span>
+                        <span class="tech-badge">Vanilla JS</span>
+                        <span class="tech-badge">Thymeleaf</span>
+                        <span class="tech-badge">Bootstrap 5</span>
+                    </div>
+
+                    <div class="tech-category">
+                        <h3>External APIs / Env</h3>
+                        <span class="tech-badge">Google Gemini API</span>
+                        <span class="tech-badge">Google Maps API</span>
+                        <span class="tech-badge">Spring Tools 4</span>
+                        <span class="tech-badge">Git / GitHub</span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Feature 4 -->
-        <div class="feature-block">
-            <div class="feature-content">
-                <h3 class="feature-title"><span>04</span> ダーク/ライトモード UI</h3>
-                <p class="feature-desc">高級時計のラグジュアリーさを極大化する洗練されたUI視覚効果を適用しました。</p>
-                <ul class="feature-list">
-                    <li>ユーザー環境に合わせたワンクリックでのテーマ切り替えトグル</li>
-                    <li>高級感を活かしたグラスモーフィズム(Glassmorphism)とCSS3アニメーションの調和</li>
-                </ul>
-            </div>
-            <div class="feature-media">
-                <div class="media-container ratio-16x9">
-                    <span class="media-label">Feature 04 Video</span>
-                    <iframe src="https://www.youtube.com/embed/SZIVS_tN4x4?rel=0" title="Dark Mode Demo" frameborder="0" allowfullscreen></iframe>
+        <!-- Slide 5: Feature 1 -->
+        <section class="slide">
+            <div class="slide-content">
+                <p class="slide-subtitle">Key Features</p>
+                <div class="feature-block">
+                    <div class="feature-content">
+                        <h3 class="feature-title"><span>01</span> AI ウォッチコンシェルジュ</h3>
+                        <p class="feature-desc">Google Gemini APIを活用した対話型カスタマイズ推薦システムです。ユーザーの複雑な要件を正確に分析します。</p>
+                        <ul class="feature-list">
+                            <li>予算、好みのスタイル（ダイバーズ、ドレスなど）、好みの国の条件を入力</li>
+                            <li>AIが最適なモデルを分析し、推薦理由を自然言語で生成</li>
+                            <li>ユーザーに合わせた専門家レベルのフィードバックを提供</li>
+                        </ul>
+                    </div>
+                    <div class="feature-media">
+                        <div class="media-container ratio-16x9">
+                            <span class="media-label">Feature 01 Video</span>
+                            <iframe src="https://www.youtube.com/embed/raauzGLToJ0?rel=0" title="AI Concierge Demo" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Feature 5 -->
-        <div class="feature-block">
-            <div class="feature-content">
-                <h3 class="feature-title"><span>05</span> マイウォッチボックス (資産管理)</h3>
-                <p class="feature-desc">自分だけのコレクションを構成し、登録された時計の総予想資産価値をリアルタイムで管理するダッシュボードです。</p>
-                <ul class="feature-list">
-                    <li>Local Storageを通じたカスタマイズデータの保存処理</li>
-                    <li>DBにない独自のカスタム時計の直接入力機能</li>
-                    <li>全コレクションの総時計価値（Total Value）のリアルタイム合算計算</li>
-                </ul>
-            </div>
-            <div class="feature-media">
-                <div class="media-container ratio-16x9">
-                    <span class="media-label">Feature 05 Video</span>
-                    <iframe src="https://www.youtube.com/embed/NGzJwZ4bdJM?rel=0" title="Watch Box Demo" frameborder="0" allowfullscreen></iframe>
+        <!-- Slide 6: Feature 2 -->
+        <section class="slide">
+            <div class="slide-content">
+                <p class="slide-subtitle">Key Features</p>
+                <div class="feature-block">
+                    <div class="feature-content">
+                        <h3 class="feature-title"><span>02</span> 公式ストア位置案内</h3>
+                        <p class="feature-desc">推薦された時計を実際に購入したり試着したりできるオフラインの公式店舗を探します。</p>
+                        <ul class="feature-list">
+                            <li>Google Maps API連携</li>
+                            <li>選択した特定の地域・都市に基づく店舗検索</li>
+                            <li>該当ブランドの認定された公式ディーラーおよびブティックを表示</li>
+                        </ul>
+                    </div>
+                    <div class="feature-media">
+                        <div class="media-container ratio-16x9">
+                            <span class="media-label">Feature 02 Video</span>
+                            <iframe src="https://www.youtube.com/embed/_sP2SYEtUv0?rel=0" title="Store Locator Demo" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- Slide 7: Feature 3 -->
+        <section class="slide">
+            <div class="slide-content">
+                <p class="slide-subtitle">Key Features</p>
+                <div class="feature-block">
+                    <div class="feature-content">
+                        <h3 class="feature-title"><span>03</span> 詳細検索＆フィルタリング</h3>
+                        <p class="feature-desc">独自に構築されたデータベース内で、希望するカテゴリー別に時計を迅速かつ直感的に探索します。</p>
+                        <ul class="feature-list">
+                            <li>多様なブランド別の分類・探索（例：Rolex, Grand Seiko 等）</li>
+                            <li>スタイル別の分類（ドレスウォッチ、スポーツ、クロノグラフ）</li>
+                        </ul>
+                    </div>
+                    <div class="feature-media">
+                        <div class="media-container ratio-16x9">
+                            <span class="media-label">Feature 03 Video</span>
+                            <iframe src="https://www.youtube.com/embed/XrN6b8H9Puo?rel=0" title="Filtering Demo" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Feature 4 -->
+        <section class="slide">
+            <div class="slide-content">
+                <p class="slide-subtitle">Key Features</p>
+                <div class="feature-block">
+                    <div class="feature-content">
+                        <h3 class="feature-title"><span>04</span> ダーク/ライトモード UI</h3>
+                        <p class="feature-desc">高級時計のラグジュアリーさを極大化する洗練されたUI視覚効果を適用しました。</p>
+                        <ul class="feature-list">
+                            <li>ユーザー環境に合わせたワンクリック에서의テーマ切り替えトグル</li>
+                            <li>高級感を活か한グラスモーフィズム(Glassmorphism)とCSS3アニメーションの調和</li>
+                        </ul>
+                    </div>
+                    <div class="feature-media">
+                        <div class="media-container ratio-16x9">
+                            <span class="media-label">Feature 04 Video</span>
+                            <iframe src="https://www.youtube.com/embed/SZIVS_tN4x4?rel=0" title="Dark Mode Demo" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Feature 5 -->
+        <section class="slide">
+            <div class="slide-content">
+                <p class="slide-subtitle">Key Features</p>
+                <div class="feature-block">
+                    <div class="feature-content">
+                        <h3 class="feature-title"><span>05</span> マイウォッチボックス (資産管理)</h3>
+                        <p class="feature-desc">自分だけのコレクションを構成し、登録された時計の総予想資産価値をリアルタイムで管理するダッシュボードです。</p>
+                        <ul class="feature-list">
+                            <li>Local Storageを通じたカスタマイズデータの保存処理</li>
+                            <li>DB에ない独自のカスタム時計の直接入力機能</li>
+                            <li>全コレクションの総時計価値（Total Value）のリアルタイム合算計算</li>
+                        </ul>
+                    </div>
+                    <div class="feature-media">
+                        <div class="media-container ratio-16x9">
+                            <span class="media-label">Feature 05 Video</span>
+                            <iframe src="https://www.youtube.com/embed/NGzJwZ4bdJM?rel=0" title="Watch Box Demo" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Footer -->
+        <section class="slide">
+            <div class="slide-content footer-content">
+                <h2 class="footer-title">Thank You</h2>
+                <p class="footer-subtitle">WatchAdvisers Project by Kim Min-jun.</p>
+                <p style="font-size: 1.1rem; opacity: 0.7;">Q & A</p>
+            </div>
+        </section>
 
     </div>
 
-    <footer>
-        <p>&copy; 2026 WatchAdvisers Project by Kim Min-jun.</p>
-        <p style="font-size: 0.9em; margin-top: 10px;">Created for GitHub Pages presentation.</p>
-    </footer>
+    <!-- Presentation JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const counter = document.getElementById('slideCounter');
+            const progressBar = document.getElementById('progressBar');
+            
+            let currentSlide = 0;
 
+            // 슬라이드 이동 시 현재 재생중인 유튜브 영상 정지 
+            function stopVideoInSlide(slideIndex) {
+                const slide = slides[slideIndex];
+                if (!slide) return;
+                const iframes = slide.querySelectorAll('iframe');
+                iframes.forEach(iframe => {
+                    const src = iframe.src;
+                    iframe.src = src; // iframe 소스 초기화 기법
+                });
+            }
+
+            function updateSlide(index) {
+                // 기존 슬라이드의 영상 정지
+                if (currentSlide !== index) {
+                    stopVideoInSlide(currentSlide);
+                }
+
+                currentSlide = index;
+
+                slides.forEach((slide, i) => {
+                    slide.classList.remove('active');
+                    if (i === currentSlide) {
+                        slide.classList.add('active');
+                        slide.scrollTop = 0; // 스크롤 맨 위로 리셋
+                    }
+                });
+
+                // 컨트롤 상태 업데이트
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === slides.length - 1;
+                counter.textContent = `${currentSlide + 1} / ${slides.length}`;
+                
+                // 프로그레스 바 
+                const progressPercentage = ((currentSlide + 1) / slides.length) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+            }
+
+            // 초기화
+            updateSlide(currentSlide);
+
+            // 버튼 클릭 이벤트
+            prevBtn.addEventListener('click', () => {
+                if (currentSlide > 0) updateSlide(currentSlide - 1);
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentSlide < slides.length - 1) updateSlide(currentSlide + 1);
+            });
+
+            // 키보드 조작 이벤트
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    if (currentSlide < slides.length - 1) {
+                        e.preventDefault();
+                        updateSlide(currentSlide + 1);
+                    }
+                } else if (e.key === 'ArrowLeft') {
+                    if (currentSlide > 0) {
+                        e.preventDefault();
+                        updateSlide(currentSlide - 1);
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
